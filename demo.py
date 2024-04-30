@@ -3,7 +3,7 @@ app = Flask(__name__)
   
 @app.route('/') 
 def hello(): 
-    return "welcome to the flask tutorials updated with Monitoring"
+    return "welcome to the flask tutorials updated with Monitoring and slack channel"
   
   
 if __name__ == "__main__": 
