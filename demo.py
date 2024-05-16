@@ -3,7 +3,7 @@ app = Flask(__name__)
   
 @app.route('/') 
 def hello(): 
-    return "welcome to the flask tutorials updated with Fluxcd and image"
+    return "welcome to the flask tutorials updated with Fluxcd and image automation"
   
   
 if __name__ == "__main__": 
