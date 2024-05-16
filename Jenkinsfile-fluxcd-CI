@@ -1,0 +1,37 @@
+pipeline{
+    agent any
+    environment{
+        Region = "ap-south-1"
+        Name = "python-flask-demo"
+        TAG = "v1"
+        VERSION = "${env.BUILD_ID}"
+        registry="822626997628.dkr.ecr.ap-south-1.amazonaws.com"
+        github_token = credentials('github-token')
+        
+    }
+    stages{
+        stage("Check out"){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ksnithya/python-flask.git']])
+            }
+        }
+        stage("Build Docker Image"){
+            steps{
+                script{
+                    echo "Building ${Name} image"
+                    sh 'docker build -t ${Name}:${TAG} .'
+                    sh 'docker tag ${Name}:${TAG} ${registry}/${Name}:${VERSION}'
+                    
+                }
+            }
+        }
+        stage("Push Im age to ECR"){
+            steps{
+                script{
+                    sh 'aws ecr get-login-password --region ${Region} | docker login --username AWS --password-stdin ${registry}'
+                    sh 'docker push ${registry}/${Name}:${VERSION}'
+                }
+            }
+        }
+    }
+}
